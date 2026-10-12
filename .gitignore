@@ -1,0 +1,90 @@
+# ─── Dependencies ──────────────────────────────────────────────
+# Reinstalled from package-lock.json with `npm install`
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ─── Build output & tool caches ────────────────────────────────
+# Recreated by `npm run build`; hosts like Vercel/Netlify build it themselves
+dist/
+dist-ssr/
+build/
+.vite/
+.cache/
+.eslintcache
+.stylelintcache
+.prettiercache
+*.tsbuildinfo
+coverage/
+
+# ─── Secrets: environment files, keys, credentials ─────────────
+# Vite reads .env files — anything in them may be an API key or token.
+# Commit a .env.example (no real values) if the project ever needs one.
+.env
+.env.*
+!.env.example
+*.local
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.keystore
+*.jks
+id_rsa*
+id_ed25519*
+secrets/
+credentials*.json
+service-account*.json
+# Can hold npm auth tokens
+.npmrc
+
+# ─── Raw media ─────────────────────────────────────────────────
+# Original camera/editor exports (the main one is 184 MB, over GitHub's 100 MB limit).
+# The site uses the web-optimised copies in public/media, which ARE committed.
+assets/
+
+# ─── Logs ──────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─── Deployment tool links (local machine ↔ hosting project) ───
+.vercel/
+.netlify/
+.firebase/
+
+# ─── Editors & AI assistants (personal settings) ───────────────
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.claude/settings.local.json
+CLAUDE.local.md
+
+# ─── Operating system junk ─────────────────────────────────────
+.DS_Store
+.AppleDouble
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ─── Temporary files ───────────────────────────────────────────
+*.tmp
+*.temp
+*.bak
+*~

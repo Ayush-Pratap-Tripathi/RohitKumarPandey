@@ -1,0 +1,229 @@
+@import 'tailwindcss';
+
+/*
+  Palette
+  - ink:   the edit-suite dark, tinted toward the portrait backdrop
+  - dusk:  sampled from Rohit's portrait backdrop (#686480 centre → #4c4765 edge)
+  - lilac: from the tee print (#a8a5c8), lifted for contrast on ink
+  - rec:   tally-light red, used only for REC / playhead
+  - canvas/graphite: the light "design file" surface
+*/
+@theme {
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Instrument Serif', ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-ink-950: #0b0a11;
+  --color-ink-900: #100f18;
+  --color-ink-850: #14131e;
+  --color-ink-800: #1a1926;
+  --color-ink-700: #24222f;
+  --color-ink-600: #312e42;
+
+  --color-dusk-300: #a7a3c0;
+  --color-dusk-400: #8783a1;
+  --color-dusk-500: #686480;
+  --color-dusk-600: #56516e;
+  --color-dusk-700: #3f3a55;
+  --color-dusk-800: #2a2740;
+
+  --color-lilac-100: #efeefd;
+  --color-lilac-200: #dddaf8;
+  --color-lilac-300: #c6c2f1;
+  --color-lilac-400: #aaa6e0;
+  --color-lilac-500: #8d88d0;
+  --color-lilac-600: #6e68c0;
+  --color-lilac-700: #524ca6;
+
+  --color-bone: #efedf5;
+  --color-mist: #a9a6ba;
+  --color-fog: #807c95;
+  --color-rec: #ff5636;
+  --color-mint: #8fdcb0;
+
+  --color-note-lilac: #dcd8fb;
+  --color-note-peach: #fbdcc8;
+  --color-note-mint: #cdeedd;
+  --color-note-sky: #d2e5fa;
+
+  --color-canvas: #ebeaf1;
+  --color-canvas-deep: #e1e0e9;
+  --color-canvas-line: #d3d1de;
+  --color-graphite: #191823;
+  --color-graphite-soft: #5d5a6e;
+  --color-select: #5b54e0;
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-cine: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --animate-rec: rec-blink 1.6s steps(1, end) infinite;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scrollbar-color: var(--color-ink-600) var(--color-ink-950);
+    /* Lenis clips overflow while stopped (overlays); keep the gutter so nothing shifts. */
+    scrollbar-gutter: stable;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-ink-950);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--color-lilac-300);
+    color: var(--color-ink-950);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-lilac-300);
+    outline-offset: 3px;
+  }
+
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+
+  html.is-locked,
+  html.is-locked body {
+    overflow: hidden;
+  }
+}
+
+@layer components {
+  .page-x {
+    width: 100%;
+    max-width: 1380px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 640px) {
+    .page-x {
+      padding-inline: 1.75rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .page-x {
+      padding-inline: 2.75rem;
+    }
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  /* FigJam-style dotted canvas */
+  .dot-grid {
+    background-image: radial-gradient(circle at 1px 1px, rgb(25 24 35 / 0.16) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+  .dot-grid-dark {
+    background-image: radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.07) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+
+  /* Filmstrip sprocket holes */
+  .sprockets {
+    background-image: radial-gradient(ellipse 6px 4.5px at center, var(--color-ink-950) 99%, transparent 100%);
+    background-size: 26px 100%;
+    background-repeat: repeat-x;
+  }
+
+  /* Film grain — normal blending keeps it cheap on low-end GPUs */
+  .grain::before {
+    content: '';
+    position: absolute;
+    inset: -100%;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.75 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    animation: grain-shift 0.9s steps(5) infinite;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mask-fade-x {
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+}
+
+/* Film-leader sweep */
+@property --sweep {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.leader-sweep {
+  background: conic-gradient(from 0deg, rgb(198 194 241 / 0.18) var(--sweep), transparent 0);
+  animation: leader-sweep 0.42s linear infinite;
+}
+
+@keyframes leader-sweep {
+  to {
+    --sweep: 360deg;
+  }
+}
+
+@keyframes rec-blink {
+  0%,
+  60% {
+    opacity: 1;
+  }
+  61%,
+  100% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes grain-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-4%, 3%);
+  }
+  40% {
+    transform: translate(3%, -5%);
+  }
+  60% {
+    transform: translate(-2%, 6%);
+  }
+  80% {
+    transform: translate(5%, -2%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain::before {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
